@@ -200,7 +200,7 @@ exports.postEditProduct = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   // Importante note:
   // countDocuments() does not retrieve all documents, it only counts them which is faster than retrieving them.
-  // skip() and limit() are managed by MongoDB in a way that you only transfer the items over the wire which you 
+  // skip() and limit() are managed by MongoDB in a way that you only transfer the items over the wire which you
   // really need. It's not doing some server side filtering of the data, it really filters it on the database server already.
   const page = +req.query.page || 1;
   let totalItems;
@@ -240,12 +240,12 @@ exports.getProducts = (req, res, next) => {
 // https://stackoverflow.com/questions/5010288/how-to-make-a-function-wait-until-a-callback-has-been-called-using-node-js
 // Basically the solution was to wrap the fileHelper.deleteFile() into a Promise
 // And wait the two functions with Promise.allSettled()
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId; // Fetch information from the product
+exports.deleteProduct = (req, res, next) => {
+  const prodId = req.params.productId;
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
-        return next(new Error("Product not found."));
+        return next(new Error("Product not found.")); // Maybe change this to send a JSON
       }
       const promiseDeleteImage = fileHelper.deleteFile(product.imageUrl);
       const promiseDeleteProduct = Product.deleteOne({
@@ -279,13 +279,11 @@ exports.postDeleteProduct = (req, res, next) => {
         } else if (results[1].status !== "fulfilled") {
           next(new Error("promiseDeleteProduct failed !"));
         } else {
-          res.redirect("/admin/products");
+          res.status(200).json({ message: "Sucess!" });
         }
       });
     })
     .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      res.status(500).json({ message: "Deleting product failed." });
     });
 };

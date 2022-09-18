@@ -52,6 +52,14 @@ router.post(
   adminController.postEditProduct
 );
 
-router.post("/delete-product", isAuth, adminController.postDeleteProduct);
+// Important note: In this example we are not sending any JSON data with the request because it is a DELETE request without a post body.
+// If it were a POST request with a body then I would have to parse JSON data in my backend.
+// Right now we only have two parsers:
+// 1) One for the URL encoded data which we don't have when we send JSON data:
+// app.use(bodyParser.urlencoded({ extended: false }));
+// 2) One for the multipart data which we also don't have there in our example:
+//app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single("image"));
+// We would have to add a new body parser that is able to handle JSON data and extract that from incoming requests.
+router.delete("/product/:productId", isAuth, adminController.deleteProduct);
 
 module.exports = router;
