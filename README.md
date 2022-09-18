@@ -5,7 +5,7 @@ Examples from the **"Section 22: Understanding Async Requests"** of the course *
 Section 22 covered:
 
 - [x] What are Async Requests?
-- [ ] Adding Client Side JS Code
+- [x] Adding Client Side JS Code
 - [ ] Sending & Handling Background Requests
 - [ ] Manipulating the DOM
 
