@@ -245,6 +245,7 @@ exports.deleteProduct = (req, res, next) => {
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
+        // return next(new Error("Product not found."));
         return res.status(500).json({ message: "Product not found." });
       }
       const promiseDeleteImage = fileHelper.deleteFile(product.imageUrl);
@@ -274,11 +275,22 @@ exports.deleteProduct = (req, res, next) => {
         promiseDeleteImage,
         promiseDeleteProduct,
       ]).then((results) => {
-        if (results[0].status !== "fulfilled") {
-          next(new Error("promiseDeleteImage failed !"));
+        if (
+          results[0].status !== "fulfilled" &&
+          results[1].status !== "fulfilled"
+        ) {
+          // next(new Error("promiseDeleteImage and promiseDeleteProduct failed !"));
+          res
+            .status(500)
+            .json({ message: "Deleting image and the product failed." });
+        } else if (results[0].status !== "fulfilled") {
+          // next(new Error("promiseDeleteImage failed !"));
+          res.status(500).json({ message: "Deleting image failed." });
         } else if (results[1].status !== "fulfilled") {
-          next(new Error("promiseDeleteProduct failed !"));
+          // next(new Error("promiseDeleteProduct failed !"));
+          res.status(500).json({ message: "Deleting product failed." });
         } else {
+          // res.redirect("/admin/products");
           res.status(200).json({ message: "Sucess!" });
         }
       });
