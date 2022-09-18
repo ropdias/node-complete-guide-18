@@ -7,7 +7,7 @@ Section 22 covered:
 - [x] What are Async Requests?
 - [x] Adding Client Side JS Code
 - [x] Sending & Handling Background Requests
-- [ ] Manipulating the DOM
+- [x] Manipulating the DOM
 
 
 
