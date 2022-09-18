@@ -245,7 +245,7 @@ exports.deleteProduct = (req, res, next) => {
   Product.findById(prodId)
     .then((product) => {
       if (!product) {
-        return next(new Error("Product not found.")); // Maybe change this to send a JSON
+        return res.status(500).json({ message: "Product not found." });
       }
       const promiseDeleteImage = fileHelper.deleteFile(product.imageUrl);
       const promiseDeleteProduct = Product.deleteOne({
